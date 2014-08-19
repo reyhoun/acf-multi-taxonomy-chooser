@@ -2,11 +2,11 @@
 
 /*
 Plugin Name: Advanced Custom Fields: Multi Taxonomy Chooser
-Plugin URI: http://reyhoun.com
+Plugin URI: https://github.com/reyhoun/acf-multi-taxonomy-chooser
 Description: Choose multi taxonomies.
 Version: 1.0.0
-Author: Parhum Khoshbakht
-Author URI: http://parhum.net/
+Author: Reyhoun
+Author URI: http://reyhoun.com/
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 */

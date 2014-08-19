@@ -1,10 +1,8 @@
-# ACF Field Type Template
+# ACF Multi Taxonomy Chooser Field
 
-Welcome to the Advanced Custom Fields field type template repository.
-Here you will find a starter-kit for creating a new ACF field type. This start-kit will work as a normal WP plugin.
+Display all taxonomies and display all terms of each taxonomy selected.
 
-For more information about creating a new field type, please read the following article:
-http://www.advancedcustomfields.com/resources/tutorials/creating-a-new-field-type/
+-----------------------
 
 ### Structure
 
@@ -15,14 +13,6 @@ http://www.advancedcustomfields.com/resources/tutorials/creating-a-new-field-typ
 * `multi-taxonomy-chooser-v5.php`: Field class compatible with ACF version 5 
 * `multi-taxonomy-chooser-v4.php`: Field class compatible with ACF version 4
 * `readme.txt`: WordPress readme file to be used by the wordpress repository
-
------------------------
-
-# ACF Multi Taxonomy Chooser Field
-
-Display all taxonomies and display all terms of each taxonomy selected.
-
------------------------
 
 ### Compatibility
 
