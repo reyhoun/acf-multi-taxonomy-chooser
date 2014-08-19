@@ -11,13 +11,12 @@ Choose multi taxonomies.
 
 == Choose multi taxonomies. ==
 
-EXTENDED_Choose multi taxonomies.
+Display all taxonomies and display all terms of each taxonomy selected.
 
 = Compatibility =
 
 This ACF field type is compatible with:
 * ACF 5
-* ACF 4
 
 == Installation ==
 
