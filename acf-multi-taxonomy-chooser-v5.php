@@ -49,6 +49,7 @@ class acf_field_multi_taxonomy_chooser extends acf_field {
             'multiple'		=> 0,
             'ui'            => 0,
             'ajax'          => 0,
+            'type_value'	=> 1,
 		);
 		
 		
@@ -119,6 +120,19 @@ class acf_field_multi_taxonomy_chooser extends acf_field {
             ),
             'layout'	=>	'horizontal',
         ));
+
+         // id or slug
+        acf_render_field_setting( $field, array(
+            'label'			=> __('Return Value','post_type_chooser'),
+            'instructions'	=> __('Specify the returned value on front end','post_type_chooser'),
+            'type'			=> 'radio',
+            'name'			=> 'type_value',
+            'choices'		=> array(
+                1				=> __("ID",'post_type_chooser'),
+                0				=> __("Slug",'post_type_chooser'),
+            ),
+            'layout'	=>	'horizontal',
+        ));
 	}
 	
 	
@@ -139,20 +153,27 @@ class acf_field_multi_taxonomy_chooser extends acf_field {
 	*/
 
     function render_field( $field ) {
+
+
         
         $taxonomies             = array();
         $taxonomies             = acf_force_type_array( $taxonomies );
         $taxonomies             = acf_get_pretty_taxonomies( $taxonomies );
         $all_taxonomies         = acf_get_taxonomy_terms();
         $selected_taxonomies    = array();
+        $terms = array();
+
+
 
         foreach( $field['choices'] as $k1 => $v1 ) {
+        	$terms = array_merge($terms, get_terms( $v1, array( 'hide_empty' => false ) ));
             foreach( $taxonomies as $k2 => $v2 ) {
                 if( $v1 == $k2 ) {
                     $field['choices'][$k1] = $v2;
                 }
             }
         }
+
         
         foreach( $field['choices'] as $k1 => $v1 ) {
             foreach( $all_taxonomies as $k2 => $v2 ) {
@@ -258,6 +279,9 @@ class acf_field_multi_taxonomy_chooser extends acf_field {
 
             foreach( $field['choices'] as $k => $v ) {
 
+
+
+
                 if( is_array($v) ){
 
                     // optgroup
@@ -266,10 +290,22 @@ class acf_field_multi_taxonomy_chooser extends acf_field {
                     if( !empty($v) ) {
 
                         foreach( $v as $k2 => $v2 ) {
+                        	if ($field['type_value']) {
+                        		foreach ($terms as $key => $val) {
+                        		
+                        			if ($val->name == $v2 ) {
+                        			    
+                        			    $els[] = array( 'type' => 'option', 'value' => $val->term_id, 'label' => $v2, 'selected' => in_array($val->term_id, $field['value']) );
 
-                            $els[] = array( 'type' => 'option', 'value' => $k2, 'label' => $v2, 'selected' => in_array($k2, $field['value']) );
+                        			}
+    
+                        		}
+                        	} else {
+                        		$els[] = array( 'type' => 'option', 'value' => $k2, 'label' => $v2, 'selected' => in_array($k2, $field['value']) );
+                        	}
 
-                            $choices[] = $k2;
+
+                        	$choices[] = $k2;
                         }
 
                     }
@@ -294,7 +330,7 @@ class acf_field_multi_taxonomy_chooser extends acf_field {
             array_unshift( $els, array( 'type' => 'option', 'value' => '', 'label' => '- ' . $field['placeholder'] . ' -' ) );
 
         }		
-
+        
 
         // html
         echo '<select ' . acf_esc_attr( $atts ) . '>';	
@@ -323,7 +359,7 @@ class acf_field_multi_taxonomy_chooser extends acf_field {
                     }
 
 
-                    // echo
+                    echo acf_esc_attr( $el );
                     echo '<option ' . acf_esc_attr( $el ) . '>' . $label . '</option>';
 
                 } else {

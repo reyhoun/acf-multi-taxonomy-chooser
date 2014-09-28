@@ -29,5 +29,8 @@ This ACF field type is compatible with:
 ### Changelog
 Please see `readme.txt` for changelog
 
-= 1.0.0 =
+## 1.1.0
+* add option to change return value
+
+## 1.0.0 
 * Initial Release.
