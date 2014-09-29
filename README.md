@@ -29,6 +29,9 @@ This ACF field type is compatible with:
 ### Changelog
 Please see `readme.txt` for changelog
 
+## 1.2.0
+* add two step term selector
+
 ## 1.1.0
 * add option to change return value
 

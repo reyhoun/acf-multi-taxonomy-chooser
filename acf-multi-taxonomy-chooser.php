@@ -4,7 +4,7 @@
 Plugin Name: Advanced Custom Fields: Multi Taxonomy Chooser
 Plugin URI: https://github.com/reyhoun/acf-multi-taxonomy-chooser
 Description: Choose multi taxonomies.
-Version: 1.1.0
+Version: 1.2.0
 Author: Reyhoun
 Author URI: http://reyhoun.com/
 License: GPLv2 or later

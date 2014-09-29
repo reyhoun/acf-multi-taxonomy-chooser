@@ -50,6 +50,7 @@ class acf_field_multi_taxonomy_chooser extends acf_field {
             'ui'            => 0,
             'ajax'          => 0,
             'type_value'	=> 1,
+            'data_type'		=> 1,
 		);
 		
 		
@@ -133,6 +134,19 @@ class acf_field_multi_taxonomy_chooser extends acf_field {
             ),
             'layout'	=>	'horizontal',
         ));
+	
+	    // multi or single
+        acf_render_field_setting( $field, array(
+            'label'			=> __('Return Value','post_type_chooser'),
+            'instructions'	=> __('Specify the returned value on front end','post_type_chooser'),
+            'type'			=> 'radio',
+            'name'			=> 'data_type',
+            'choices'		=> array(
+                1				=> __("Multi",'post_type_chooser'),
+                0				=> __("Single",'post_type_chooser'),
+            ),
+            'layout'	=>	'horizontal',
+        ));
 	}
 	
 	
@@ -162,7 +176,6 @@ class acf_field_multi_taxonomy_chooser extends acf_field {
         $all_taxonomies         = acf_get_taxonomy_terms();
         $selected_taxonomies    = array();
         $terms = array();
-
 
 
         foreach( $field['choices'] as $k1 => $v1 ) {
@@ -274,110 +287,187 @@ class acf_field_multi_taxonomy_chooser extends acf_field {
         $choices = array();
 
 
-        // loop through values and add them as options
-        if( !empty($field['choices']) ) {
+        if ($field['data_type']) {
+        	// loop through values and add them as options
+        	if( !empty($field['choices']) ) {
 
-            foreach( $field['choices'] as $k => $v ) {
+        	    foreach( $field['choices'] as $k => $v ) {
 
+       		         if( is_array($v) ){
 
+        	            // optgroup
+        	            $els[] = array( 'type' => 'optgroup', 'label' => $k );
 
+        	            if( !empty($v) ) {
 
-                if( is_array($v) ){
+        	                foreach( $v as $k2 => $v2 ) {
+        	                	if ($field['type_value']) {
+        	                		foreach ($terms as $key => $val) {
+        	                		
+        	                			if ($val->name == $v2 ) {
+        	                			    
+        	                			    $els[] = array( 'type' => 'option', 'value' => $val->term_id, 'label' => $v2, 'selected' => in_array($val->term_id, $field['value']) );
+	
+        	                			}
+    	
+        	                		}
+        	                	} else {
+        	                		$els[] = array( 'type' => 'option', 'value' => $k2, 'label' => $v2, 'selected' => in_array($k2, $field['value']) );
+        	                	}
+	
+	
+        	                	$choices[] = $k2;
+        	                }
+	
+        	            }
+	
+        	            $els[] = array( 'type' => '/optgroup' );
+	
+        	        } else {
+	
+        	            $els[] = array( 'type' => 'option', 'value' => $k, 'label' => $v, 'selected' => in_array($k, $field['value']) );
+	
+        	            $choices[] = $k;
 
-                    // optgroup
-                    $els[] = array( 'type' => 'optgroup', 'label' => $k );
+        	        }
 
-                    if( !empty($v) ) {
+        	    }
+        	}
 
-                        foreach( $v as $k2 => $v2 ) {
-                        	if ($field['type_value']) {
-                        		foreach ($terms as $key => $val) {
-                        		
-                        			if ($val->name == $v2 ) {
-                        			    
-                        			    $els[] = array( 'type' => 'option', 'value' => $val->term_id, 'label' => $v2, 'selected' => in_array($val->term_id, $field['value']) );
+	
+        	// null
+        	if( $field['allow_null'] ) {
 
-                        			}
-    
-                        		}
-                        	} else {
-                        		$els[] = array( 'type' => 'option', 'value' => $k2, 'label' => $v2, 'selected' => in_array($k2, $field['value']) );
-                        	}
+        	    array_unshift( $els, array( 'type' => 'option', 'value' => '', 'label' => '- ' . $field['placeholder'] . ' -' ) );
 
-
-                        	$choices[] = $k2;
-                        }
-
-                    }
-
-                    $els[] = array( 'type' => '/optgroup' );
-
-                } else {
-
-                    $els[] = array( 'type' => 'option', 'value' => $k, 'label' => $v, 'selected' => in_array($k, $field['value']) );
-
-                    $choices[] = $k;
-
-                }
-
-            }
-
-        }
-
-        // null
-        if( $field['allow_null'] ) {
-
-            array_unshift( $els, array( 'type' => 'option', 'value' => '', 'label' => '- ' . $field['placeholder'] . ' -' ) );
-
-        }		
+        	}		
         
 
-        // html
-        echo '<select ' . acf_esc_attr( $atts ) . '>';	
+
+        // if ($field['data_type']) {
+        	        
+        	// html
+        	echo '<select ' . acf_esc_attr( $atts ) . '>';	
+
+        	// construct html
+        	if( !empty($els) ) {
+
+        	    foreach( $els as $el ) {
+
+        	        // extract type
+        	        $type = acf_extract_var($el, 'type');
 
 
-        // construct html
-        if( !empty($els) ) {
+        	        if( $type == 'option' ) {
 
-            foreach( $els as $el ) {
-
-                // extract type
-                $type = acf_extract_var($el, 'type');
+        	            // get label
+        	            $label = acf_extract_var($el, 'label');
 
 
-                if( $type == 'option' ) {
+        	            // validate selected
+        	            if( acf_extract_var($el, 'selected') ) {
 
-                    // get label
-                    $label = acf_extract_var($el, 'label');
+        	                $el['selected'] = 'selected';
 
+         	           }
+        	            echo acf_esc_attr( $el );
+        	            echo '<option ' . acf_esc_attr( $el ) . '>' . $label . '</option>';
 
-                    // validate selected
-                    if( acf_extract_var($el, 'selected') ) {
+        	        } else {
 
-                        $el['selected'] = 'selected';
+        	            echo '<' . $type . ' ' . acf_esc_attr( $el ) . '>';
+        	        }
+        	    }
 
-                    }
-
-
-                    echo acf_esc_attr( $el );
-                    echo '<option ' . acf_esc_attr( $el ) . '>' . $label . '</option>';
-
-                } else {
-
-                    // echo
-                    echo '<' . $type . ' ' . acf_esc_attr( $el ) . '>';
-
-                }
-
-
-            }
-
+        	}
         }
+        else {
+
+        	$els = '[';
+        	$i = 0;
+        	foreach( $field['choices'] as $k => $v ) {
+       		    if( is_array($v) ){
+       		    	$i++;
+       		    	$els .= '[';
+       		    	foreach ($v  as $k2 => $v2) {
+       		    		foreach ($terms as $key => $val) {
+        	               	if ($val->name == $v2 ) {
+
+        	               		$els .= '["' . $v2 .'","' . $val->term_id . '"'. '],';
+        	               	}
+        	            }
+       		    	}
+       		    	$els .= '],';
+       		    }
+       		}
+       		$els .= ']';
 
 
-        echo '</select>';
-    }
+        	echo '<div class="">';
+				echo '<label class="" for="'. $field['key'] .'">Taxonomies</label> ';
+				echo '<select class="js-multi-taxonomy-select2"  name="' . $field['name'] . '" id="' . $field['key'] . '-taxonomies">';
+					$i = 0;
+					foreach ($field['choices'] as $k => $v) {
+						echo '<option value="' . $i++ . '">' . $k . '</option>';
+					}
+				echo '</select>';
+			echo '</div>';
+
+
+			echo '<div class="">';
+				echo '<label class="" for="'. $field['key'] .'">Terms</label> ';
+				echo '<input name="' . $field['name'] . '" id="' . $field['key'] . '-terms" class="js-multi-taxonomy-select2" value="'  . '" />';
+			echo '</div>';
+        	
+
+        // }
+
+
+
+            echo '
+			<script>
+				(function($){
+
+					$(".'. $field['key'] .'-js-select2").select2({
+					    placeholder: "Select a State"
+					});
+
+					var arr = ' . $els . ';
+
+		//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+   					$("#' . $field['key'] . '-taxonomies").ready(function(){
+
+   						$("#' . $field['key'] . '-terms").select2({
+
+
+							multiple: true,
+					     	query: function (query) {
+
+					     			alert($("#' . $field['key'] . '-terms").val());
+					     		   var data = {results: []}, i;
+					
+					     		   for (i in arr[$("#' . $field['key'] . '-taxonomies").val()] ) { 
+					     		   		data.results.push({id: arr[$("#' . $field['key'] . '-taxonomies").val()][i][1] , text: arr[$("#' . $field['key'] . '-taxonomies").val()][i][0]});
+					     		   }
+					     		   query.callback(data);
+ 					    	},
+					    });
+
+   					});
+
+		//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+   					$("#' . $field['key'] . '-taxonomies").on("change", function(){
+   							$("#' . $field['key'] . '-terms").select2("val","");
+   					})
+
+				})(jQuery);
+			</script> ';
+		}
 	
+    }
+
 		
 	/*
 	*  input_admin_enqueue_scripts()
