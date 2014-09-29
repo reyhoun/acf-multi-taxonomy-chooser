@@ -420,10 +420,6 @@ class acf_field_multi_taxonomy_chooser extends acf_field {
 			echo '</div>';
         	
 
-        // }
-
-
-
             echo '
 			<script>
 				(function($){
@@ -437,6 +433,7 @@ class acf_field_multi_taxonomy_chooser extends acf_field {
 		//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
    					$("#' . $field['key'] . '-taxonomies").ready(function(){
+	
 
    						$("#' . $field['key'] . '-terms").select2({
 
@@ -444,7 +441,6 @@ class acf_field_multi_taxonomy_chooser extends acf_field {
 							multiple: true,
 					     	query: function (query) {
 
-					     			alert($("#' . $field['key'] . '-terms").val());
 					     		   var data = {results: []}, i;
 					
 					     		   for (i in arr[$("#' . $field['key'] . '-taxonomies").val()] ) { 
