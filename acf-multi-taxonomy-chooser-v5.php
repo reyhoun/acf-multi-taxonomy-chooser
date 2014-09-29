@@ -169,6 +169,7 @@ class acf_field_multi_taxonomy_chooser extends acf_field {
     function render_field( $field ) {
 
 
+
         
         $taxonomies             = array();
         $taxonomies             = acf_force_type_array( $taxonomies );
@@ -199,14 +200,14 @@ class acf_field_multi_taxonomy_chooser extends acf_field {
         $field['choices'] = $selected_taxonomies;
         
         // convert value to array
-        $field['value'] = acf_force_type_array($field['value']);
+        // $field['value'] = acf_force_type_array($field['value']);
 
 
         // add empty value (allows '' to be selected)
         if( empty($field['value']) ){
 
             $field['value'][''] = '';
-
+            $field['value']['cat']	 = 	'';
         }
 
 
@@ -393,7 +394,7 @@ class acf_field_multi_taxonomy_chooser extends acf_field {
        		    		foreach ($terms as $key => $val) {
         	               	if ($val->name == $v2 ) {
 
-        	               		$els .= '["' . $v2 .'","' . $val->term_id . '"'. '],';
+        	               		$els .= '["' . $v2 .'","' . $val->term_id . '",'. '"' . $k . '"],';
         	               	}
         	            }
        		    	}
@@ -415,25 +416,30 @@ class acf_field_multi_taxonomy_chooser extends acf_field {
 
 
 			echo '<div class="">';
-				echo '<label class="" for="'. $field['key'] .'">Terms</label> ';
-				echo '<input name="' . $field['name'] . '" id="' . $field['key'] . '-terms" class="js-multi-taxonomy-select2" value="'  . '" />';
+				echo '<label class="" >Terms</label> ';
+				echo '<input name="' . $field['name'] . '[cat]" id="' . $field['key'] . '-terms" class="js-multi-taxonomy-select2" value="" />';
 			echo '</div>';
         	
+
+        // }
+
+
 
             echo '
 			<script>
 				(function($){
 
-					$(".'. $field['key'] .'-js-select2").select2({
-					    placeholder: "Select a State"
-					});
+					// $(".'. $field['key'] .'-js-select2").select2({
+					//     placeholder: "Select a State"
+					// });
 
 					var arr = ' . $els . ';
 
 		//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-   					$("#' . $field['key'] . '-taxonomies").ready(function(){
-	
+   					$("#' . $field['key'] . '-taxonomies").ready(function(){	
+
+   						$("#' . $field['key'] . '-terms").attr("name","' . $field['name'] . '[" + arr[$("#' . $field['key'] . '-taxonomies").val()][0][2]+ "]")
 
    						$("#' . $field['key'] . '-terms").select2({
 
@@ -448,6 +454,13 @@ class acf_field_multi_taxonomy_chooser extends acf_field {
 					     		   }
 					     		   query.callback(data);
  					    	},
+ 					    	initSelection : function (element, callback) {
+
+    			   		var elementText = $(element).val();
+
+    			        var data = {id: elementText, text: elementText};
+    			        callback(data);
+    			    }
 					    });
 
    					});
@@ -455,6 +468,8 @@ class acf_field_multi_taxonomy_chooser extends acf_field {
 		//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
    					$("#' . $field['key'] . '-taxonomies").on("change", function(){
+
+   							$("#' . $field['key'] . '-terms").attr("name","' . $field['name'] . '[" + arr[$("#' . $field['key'] . '-taxonomies").val()][0][2]+ "]")
    							$("#' . $field['key'] . '-terms").select2("val","");
    					})
 
