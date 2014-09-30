@@ -177,7 +177,7 @@ class acf_field_multi_taxonomy_chooser extends acf_field {
         $all_taxonomies         = acf_get_taxonomy_terms();
         $selected_taxonomies    = array();
         $terms = array();
-
+       	$slug_name = $field['choices'];
 
         foreach( $field['choices'] as $k1 => $v1 ) {
         	$terms = array_merge($terms, get_terms( $v1, array( 'hide_empty' => false ) ));
@@ -198,6 +198,8 @@ class acf_field_multi_taxonomy_chooser extends acf_field {
         }
 
         $field['choices'] = $selected_taxonomies;
+
+
         
         // convert value to array
         // $field['value'] = acf_force_type_array($field['value']);
@@ -388,18 +390,18 @@ class acf_field_multi_taxonomy_chooser extends acf_field {
         	$i = 0;
         	foreach( $field['choices'] as $k => $v ) {
        		    if( is_array($v) ){
-       		    	$i++;
        		    	$els .= '[';
        		    	foreach ($v  as $k2 => $v2) {
        		    		foreach ($terms as $key => $val) {
         	               	if ($val->name == $v2 ) {
 
-        	               		$els .= '["' . $v2 .'","' . $val->term_id . '",'. '"' . $k . '"],';
+        	               		$els .= '["' . $v2 .'","' . $val->term_id . '",'. '"' . $slug_name[$i] . '"],';
         	               	}
         	            }
        		    	}
        		    	$els .= '],';
        		    }
+       		    $i++;
        		}
        		$els .= ']';
 
