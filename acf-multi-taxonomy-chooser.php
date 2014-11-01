@@ -1,14 +1,16 @@
 <?php
 
 /*
-Plugin Name: Advanced Custom Fields: Multi Taxonomy Chooser
-Plugin URI: https://github.com/reyhoun/acf-multi-taxonomy-chooser
-Description: Choose multi taxonomies.
-Version: 1.2.1
-Author: Reyhoun
-Author URI: http://reyhoun.com/
-License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+ * Plugin Name: Advanced Custom Fields: Multi Taxonomy Chooser
+ * Plugin URI: https://github.com/reyhoun/acf-multi-taxonomy-chooser
+ * Description: Choose multi taxonomies.
+ * Version: 1.3.0
+ * Author: Reyhoun
+ * Author URI: http://reyhoun.com/
+ * License: GPLv2 or later
+ * License URI: http://www.gnu.org/licenses/gpl-2.0.html
+ * GitHub Plugin URI: https://github.com/reyhoun/acf-multi-taxonomy-chooser
+ * GitHub Branch:     master
 */
 
 
@@ -31,8 +33,4 @@ function include_field_types_multi_taxonomy_chooser( $version ) {
 
 add_action('acf/include_field_types', 'include_field_types_multi_taxonomy_chooser');	
 
-
-
-
-	
 ?>
