@@ -168,7 +168,9 @@ class acf_field_multi_taxonomy_chooser extends acf_field {
 
     function render_field( $field ) {
 
-
+	    	// echo "<pre>";
+	    	// 	print_r($field);
+	    	// echo "</pre>";
 
         
         $taxonomies             = array();
@@ -200,7 +202,7 @@ class acf_field_multi_taxonomy_chooser extends acf_field {
         $field['choices'] = $selected_taxonomies;
 
 
-        
+        	
         // convert value to array
         // $field['value'] = acf_force_type_array($field['value']);
 
@@ -306,16 +308,16 @@ class acf_field_multi_taxonomy_chooser extends acf_field {
         	                foreach( $v as $k2 => $v2 ) {
         	                	if ($field['type_value']) {
         	                		foreach ($terms as $key => $val) {
-        	                		
+
         	                			if ($val->name == $v2 ) {
-        	                			    
-        	                			    $els[] = array( 'type' => 'option', 'value' => $val->term_id, 'label' => $v2, 'selected' => in_array($val->term_id, $field['value']) );
+
+        	                			    $els[] = array( 'type' => 'option', 'value' => $val->term_id, 'label' => $v2 , 'selected' => $slct = ($val->term_id == $field['value'] ? "selected": "") );
 	
         	                			}
     	
         	                		}
         	                	} else {
-        	                		$els[] = array( 'type' => 'option', 'value' => $k2, 'label' => $v2, 'selected' => in_array($k2, $field['value']) );
+        	                		$els[] = array( 'type' => 'option', 'value' => $k2, 'label' => $v2, 'selected' => $slct = ($k2 == $field['value'] ? "selected": "") );
         	                	}
 	
 	
@@ -328,7 +330,7 @@ class acf_field_multi_taxonomy_chooser extends acf_field {
 	
         	        } else {
 	
-        	            $els[] = array( 'type' => 'option', 'value' => $k, 'label' => $v, 'selected' => in_array($k, $field['value']) );
+        	            $els[] = array( 'type' => 'option', 'value' => $k, 'label' => $v, 'selected' => $slct = ($k == $field['value'] ? "selected": "") );
 	
         	            $choices[] = $k;
 
@@ -337,7 +339,6 @@ class acf_field_multi_taxonomy_chooser extends acf_field {
         	    }
         	}
 
-	
         	// null
         	if( $field['allow_null'] ) {
 
@@ -405,10 +406,10 @@ class acf_field_multi_taxonomy_chooser extends acf_field {
        		}
        		$els .= ']';
 
-
-        	echo '<div class="">';
+       	echo '<div class="h">';
+        	echo '<div class="Taxonomies">';
 				echo '<label class="" for="'. $field['key'] .'">Taxonomies</label> ';
-				echo '<select class="js-multi-taxonomy-select2"  name="' . $field['name'] . '" id="' . $field['key'] . '-taxonomies">';
+				echo '<select class="js-multi-taxonomy-select2 taxonomiesF"  name="' . $field['name'] . '" id="' . $field['key'] . '-taxonomies">';
 					$i = 0;
 					foreach ($field['choices'] as $k => $v) {
 						echo '<option value="' . $i++ . '">' . $k . '</option>';
@@ -417,10 +418,11 @@ class acf_field_multi_taxonomy_chooser extends acf_field {
 			echo '</div>';
 
 
-			echo '<div class="">';
+			echo '<div class="Terms">';
 				echo '<label class="" >Terms</label> ';
-				echo '<input name="' . $field['name'] . '[cat]" id="' . $field['key'] . '-terms" class="js-multi-taxonomy-select2" value="" />';
+				echo '<input name="' . $field['name'] . '[cat]" id="' . $field['key'] . '-terms" class="js-multi-taxonomy-select2 termsF" value="" />';
 			echo '</div>';
+		echo '</div>';
         	
 
         // }
@@ -431,19 +433,16 @@ class acf_field_multi_taxonomy_chooser extends acf_field {
 			<script>
 				(function($){
 
-					// $(".'. $field['key'] .'-js-select2").select2({
-					//     placeholder: "Select a State"
-					// });
-
 					var arr = ' . $els . ';
 
 		//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-   					$("#' . $field['key'] . '-taxonomies").ready(function(){	
+				$(".TaxonomiesF").each(function(){
+   					$(this).ready(function(){	
 
-   						$("#' . $field['key'] . '-terms").attr("name","' . $field['name'] . '[" + arr[$("#' . $field['key'] . '-taxonomies").val()][0][2]+ "]")
+   						$(this).closest(":has(.h .Terms .termsF)").find(".termsF").attr("name","' . $field['name'] . '[" + arr[$(this).closest(":has(.h .Taxonomies .TaxonomiesF)").find(".TaxonomiesF").val()][0][2]+ "]")
 
-   						$("#' . $field['key'] . '-terms").select2({
+   						$(this).closest(":has(.h .Terms .termsF)").find(".termsF").select2({
 
 
 							multiple: true,
@@ -451,8 +450,8 @@ class acf_field_multi_taxonomy_chooser extends acf_field {
 
 					     		   var data = {results: []}, i;
 					
-					     		   for (i in arr[$("#' . $field['key'] . '-taxonomies").val()] ) { 
-					     		   		data.results.push({id: arr[$("#' . $field['key'] . '-taxonomies").val()][i][1] , text: arr[$("#' . $field['key'] . '-taxonomies").val()][i][0]});
+					     		   for (i in arr[$(this).closest(":has(.h .Taxonomies .TaxonomiesF)").find(".TaxonomiesF").val()] ) { 
+					     		   		data.results.push({id: arr[$(this).closest(":has(.h .Taxonomies .TaxonomiesF)").find(".TaxonomiesF").val()][i][1] , text: arr[$(this).closest(":has(.h .Taxonomies .TaxonomiesF)").find(".TaxonomiesF").val()][i][0]});
 					     		   }
 					     		   query.callback(data);
  					    	},
@@ -462,18 +461,12 @@ class acf_field_multi_taxonomy_chooser extends acf_field {
 
     			        var data = {id: elementText, text: elementText};
     			        callback(data);
-    			    }
+    			    	}
 					    });
-
-   					});
+				    });				
+   				});
 
 		//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-   					$("#' . $field['key'] . '-taxonomies").on("change", function(){
-
-   							$("#' . $field['key'] . '-terms").attr("name","' . $field['name'] . '[" + arr[$("#' . $field['key'] . '-taxonomies").val()][0][2]+ "]")
-   							$("#' . $field['key'] . '-terms").select2("val","");
-   					})
 
 				})(jQuery);
 			</script> ';
