@@ -179,9 +179,9 @@ class acf_field_multi_taxonomy_chooser extends acf_field {
         $all_taxonomies         = acf_get_taxonomy_terms();
         $selected_taxonomies    = array();
         $terms = array();
-       	$slug_name = $field['choices'];
+       	$slug_name = ! empty( $field['choices'] ) ? $field['choices'] : array_keys( acf_get_pretty_taxonomies() );
 
-        foreach( $field['choices'] as $k1 => $v1 ) {
+        foreach( $slug_name as $k1 => $v1 ) {
         	$terms = array_merge($terms, get_terms( $v1, array( 'hide_empty' => false ) ));
             foreach( $taxonomies as $k2 => $v2 ) {
                 if( $v1 == $k2 ) {
