@@ -174,7 +174,7 @@ class acf_field_multi_taxonomy_chooser extends acf_field {
 
         
         $taxonomies             = array();
-        $taxonomies             = acf_force_type_array( $taxonomies );
+        $taxonomies             = acf_get_array( $taxonomies );
         $taxonomies             = acf_get_pretty_taxonomies( $taxonomies );
         $all_taxonomies         = acf_get_taxonomy_terms();
         $selected_taxonomies    = array();
