@@ -2,7 +2,7 @@
     
     function initialize_field( $el ) {
 
-        $('.field_type-multi-taxonomy-chooser .select2-container-disabled').remove();
+        //$('.field_type-multi-taxonomy-chooser .select2-container-disabled').remove();
         
 		//$el.doStuff();
 		
@@ -27,7 +27,7 @@
 		
         acf.add_action('ready append', function( $el ){
 
-            $("select.js-multi-taxonomy-select2").select2();
+            //$("select.js-multi-taxonomy-select2").select2();
             
             // search $el for fields of type 'multi-taxonomy-chooser'
             acf.get_fields({ type : 'multi-taxonomy-chooser'}, $el).each(function(){
