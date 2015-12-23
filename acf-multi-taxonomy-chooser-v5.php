@@ -346,44 +346,43 @@ class acf_field_multi_taxonomy_chooser extends acf_field {
 
         	}		
         
-
-
-        // if ($field['data_type']) {
         	        
         	// html
         	echo '<select ' . acf_esc_attr( $atts ) . '>';	
 
-        	// construct html
-        	if( !empty($els) ) {
+	        	// construct html
+	        	if( !empty($els) ) {
 
-        	    foreach( $els as $el ) {
+	        	    foreach( $els as $el ) {
 
-        	        // extract type
-        	        $type = acf_extract_var($el, 'type');
-
-
-        	        if( $type == 'option' ) {
-
-        	            // get label
-        	            $label = acf_extract_var($el, 'label');
+	        	        // extract type
+	        	        $type = acf_extract_var($el, 'type');
 
 
-        	            // validate selected
-        	            if( acf_extract_var($el, 'selected') ) {
+	        	        if( $type == 'option' ) {
 
-        	                $el['selected'] = 'selected';
+	        	            // get label
+	        	            $label = acf_extract_var($el, 'label');
 
-         	           }
-        	            echo acf_esc_attr( $el );
-        	            echo '<option ' . acf_esc_attr( $el ) . '>' . $label . '</option>';
 
-        	        } else {
+	        	            // validate selected
+	        	            if( acf_extract_var($el, 'selected') ) {
 
-        	            echo '<' . $type . ' ' . acf_esc_attr( $el ) . '>';
-        	        }
-        	    }
+	        	                $el['selected'] = 'selected';
 
-        	}
+	         	           }
+	        	            echo acf_esc_attr( $el );
+	        	            echo '<option ' . acf_esc_attr( $el ) . '>' . $label . '</option>';
+
+	        	        } else {
+
+	        	            echo '<' . $type . ' ' . acf_esc_attr( $el ) . '>';
+	        	        }
+	        	    }
+
+	        	}
+
+        	echo '</select>';
         }
         else {
 
