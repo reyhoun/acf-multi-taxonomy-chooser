@@ -97,7 +97,7 @@ class acf_field_multi_taxonomy_chooser extends acf_field {
 		
         // choices : Taxonomies
         acf_render_field_setting( $field, array(
-            'label'			=> __('Choose Allowed Post Type','post_type_chooser'),
+            'label'			=> __('Choose Allowed Taxonomies','acf-multi-taxonomy-chooser'),
             'instructions'	=> '',
             'type'			=> 'select',
             'name'			=> 'choices',
@@ -105,45 +105,45 @@ class acf_field_multi_taxonomy_chooser extends acf_field {
             'multiple'		=> 1,
             'ui'			=> 1,
             'allow_null'	=> 1,
-            'placeholder'	=> __("All post types",'post_type_chooser'),
+            'placeholder'	=> __("All Taxonomies",'acf-multi-taxonomy-chooser'),
         ));
 
 
         // multiple
         acf_render_field_setting( $field, array(
-            'label'			=> __('Select multiple values?','post_type_chooser'),
+            'label'			=> __('Select multiple values?','acf-multi-taxonomy-chooser'),
             'instructions'	=> '',
             'type'			=> 'radio',
             'name'			=> 'multiple',
             'choices'		=> array(
-                1				=> __("Yes",'post_type_chooser'),
-                0				=> __("No",'post_type_chooser'),
+                1				=> __("Yes",'acf-multi-taxonomy-chooser'),
+                0				=> __("No",'acf-multi-taxonomy-chooser'),
             ),
             'layout'	=>	'horizontal',
         ));
 
          // id or slug
         acf_render_field_setting( $field, array(
-            'label'			=> __('Return Value','post_type_chooser'),
-            'instructions'	=> __('Specify the returned value on front end','post_type_chooser'),
+            'label'			=> __('Return Value','acf-multi-taxonomy-chooser'),
+            'instructions'	=> __('Specify the returned value on front end','acf-multi-taxonomy-chooser'),
             'type'			=> 'radio',
             'name'			=> 'type_value',
             'choices'		=> array(
-                1				=> __("ID",'post_type_chooser'),
-                0				=> __("Slug",'post_type_chooser'),
+                1				=> __("ID",'acf-multi-taxonomy-chooser'),
+                0				=> __("Slug",'acf-multi-taxonomy-chooser'),
             ),
             'layout'	=>	'horizontal',
         ));
 	
 	    // multi or single
         acf_render_field_setting( $field, array(
-            'label'			=> __('Return Value','post_type_chooser'),
-            'instructions'	=> __('Specify the returned value on front end','post_type_chooser'),
+            'label'			=> __('Return Value','acf-multi-taxonomy-chooser'),
+            'instructions'	=> __('Specify the returned value on front end','acf-multi-taxonomy-chooser'),
             'type'			=> 'radio',
             'name'			=> 'data_type',
             'choices'		=> array(
-                1				=> __("Multi",'post_type_chooser'),
-                0				=> __("Single",'post_type_chooser'),
+                1				=> __("Multi",'acf-multi-taxonomy-chooser'),
+                0				=> __("Single",'acf-multi-taxonomy-chooser'),
             ),
             'layout'	=>	'horizontal',
         ));
@@ -174,14 +174,14 @@ class acf_field_multi_taxonomy_chooser extends acf_field {
 
         
         $taxonomies             = array();
-        $taxonomies             = acf_force_type_array( $taxonomies );
+        $taxonomies             = acf_get_array( $taxonomies );
         $taxonomies             = acf_get_pretty_taxonomies( $taxonomies );
         $all_taxonomies         = acf_get_taxonomy_terms();
         $selected_taxonomies    = array();
         $terms = array();
-       	$slug_name = $field['choices'];
+       	$slug_name = ! empty( $field['choices'] ) ? $field['choices'] : array_keys( acf_get_pretty_taxonomies() );
 
-        foreach( $field['choices'] as $k1 => $v1 ) {
+        foreach( $slug_name as $k1 => $v1 ) {
         	$terms = array_merge($terms, get_terms( $v1, array( 'hide_empty' => false ) ));
             foreach( $taxonomies as $k2 => $v2 ) {
                 if( $v1 == $k2 ) {
@@ -346,44 +346,43 @@ class acf_field_multi_taxonomy_chooser extends acf_field {
 
         	}		
         
-
-
-        // if ($field['data_type']) {
         	        
         	// html
         	echo '<select ' . acf_esc_attr( $atts ) . '>';	
 
-        	// construct html
-        	if( !empty($els) ) {
+	        	// construct html
+	        	if( !empty($els) ) {
 
-        	    foreach( $els as $el ) {
+	        	    foreach( $els as $el ) {
 
-        	        // extract type
-        	        $type = acf_extract_var($el, 'type');
-
-
-        	        if( $type == 'option' ) {
-
-        	            // get label
-        	            $label = acf_extract_var($el, 'label');
+	        	        // extract type
+	        	        $type = acf_extract_var($el, 'type');
 
 
-        	            // validate selected
-        	            if( acf_extract_var($el, 'selected') ) {
+	        	        if( $type == 'option' ) {
 
-        	                $el['selected'] = 'selected';
+	        	            // get label
+	        	            $label = acf_extract_var($el, 'label');
 
-         	           }
-        	            echo acf_esc_attr( $el );
-        	            echo '<option ' . acf_esc_attr( $el ) . '>' . $label . '</option>';
 
-        	        } else {
+	        	            // validate selected
+	        	            if( acf_extract_var($el, 'selected') ) {
 
-        	            echo '<' . $type . ' ' . acf_esc_attr( $el ) . '>';
-        	        }
-        	    }
+	        	                $el['selected'] = 'selected';
 
-        	}
+	         	           }
+	        	            echo acf_esc_attr( $el );
+	        	            echo '<option ' . acf_esc_attr( $el ) . '>' . $label . '</option>';
+
+	        	        } else {
+
+	        	            echo '<' . $type . ' ' . acf_esc_attr( $el ) . '>';
+	        	        }
+	        	    }
+
+	        	}
+
+        	echo '</select>';
         }
         else {
 
